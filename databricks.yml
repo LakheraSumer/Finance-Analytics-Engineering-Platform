@@ -1,0 +1,16 @@
+# Databricks Asset Bundle: `databricks bundle deploy` creates the medallion job in your workspace.
+bundle:
+  name: finance-lakehouse
+
+include:
+  - resources/*.yml
+
+variables:
+  catalog:
+    description: Unity Catalog catalog that holds the finance_* schemas
+    default: workspace
+
+targets:
+  dev:
+    mode: development
+    default: true

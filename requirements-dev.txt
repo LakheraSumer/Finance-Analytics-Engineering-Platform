@@ -1,0 +1,4 @@
+# Local development and CI (Databricks runtimes already include Spark and Delta Lake). Requires Java 17.
+pyspark==3.5.3
+delta-spark==3.2.1
+pytest>=8.0

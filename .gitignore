@@ -1,0 +1,18 @@
+# secrets / Databricks CLI
+.env
+*.key
+.databrickscfg
+.databricks/
+
+# python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+
+# local Spark / Delta output
+.lakehouse/
+spark-warehouse/
+metastore_db/
+derby.log

@@ -1,0 +1,33 @@
+# Medallion workflow on serverless compute: generate -> bronze -> silver -> gold -> data-quality gate.
+resources:
+  jobs:
+    finance_lakehouse:
+      name: finance-lakehouse-medallion
+      max_concurrent_runs: 1
+      parameters:
+        - name: catalog
+          default: ${var.catalog}
+        - name: batch
+          default: "1"
+        - name: run_id
+          default: "{{job.run_id}}"
+      tasks:
+        - task_key: generate_landing_data
+          notebook_task:
+            notebook_path: ../notebooks/01_generate_landing_data.py
+        - task_key: bronze_ingest
+          depends_on: [{task_key: generate_landing_data}]
+          notebook_task:
+            notebook_path: ../notebooks/02_bronze_ingest.py
+        - task_key: silver_transform
+          depends_on: [{task_key: bronze_ingest}]
+          notebook_task:
+            notebook_path: ../notebooks/03_silver_transform.py
+        - task_key: gold_model
+          depends_on: [{task_key: silver_transform}]
+          notebook_task:
+            notebook_path: ../notebooks/04_gold_model.py
+        - task_key: data_quality_gate
+          depends_on: [{task_key: gold_model}]
+          notebook_task:
+            notebook_path: ../notebooks/05_data_quality.py
