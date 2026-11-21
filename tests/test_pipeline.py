@@ -2,10 +2,16 @@
 import uuid
 from datetime import datetime
 
+import os
+
 import pytest
 
-pytest.importorskip("pyspark")
-pytest.importorskip("delta")
+if os.getenv("CI"):  # on CI the Spark tests must run, never silently skip
+    import delta  # noqa: F401
+    import pyspark  # noqa: F401
+else:
+    pytest.importorskip("pyspark")
+    pytest.importorskip("delta")
 
 from pyspark.sql import functions as F  # noqa: E402
 
