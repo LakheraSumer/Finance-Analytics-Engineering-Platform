@@ -67,8 +67,9 @@ erDiagram
 - **Idempotent by design.** Bronze skips files it has already loaded (Auto Loader checkpoint; `_source_file` anti-join
   locally), silver and gold use `MERGE` that only applies *newer* versions, and watermarks advance only after a step
   succeeds. Re-running any step with no new data changes nothing - this is asserted in the tests.
-- **Bad data is quarantined, not dropped.** Seven validation rules (missing keys, unparseable or non-positive amounts,
-  invalid/future timestamps, unknown transaction types or channels) route rows to `*_quarantine` with a reason.
+- **Bad data is quarantined, not dropped.** Nine validation rules on transactions (missing keys, unparseable or
+  non-positive amounts, invalid or future timestamps, unknown transaction types, channels or statuses) route rows to
+  `*_quarantine` with a reason.
 - **SCD Type 2 in one MERGE.** Changed customers are staged twice: once keyed on the business key to expire the current
   row, once with a NULL merge key so the new version is inserted. Facts pick the customer version that was valid at
   the transaction time, so spend is attributed to the city a customer lived in *then*.
